@@ -1,1 +1,3 @@
-print("Oi, logo logo, o código será liberado aqui:)")
+mensagem = "Oi, logo logo, o código será upado aqui"
+
+print(mensagem)
