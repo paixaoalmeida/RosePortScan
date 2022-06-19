@@ -4,6 +4,7 @@
 #GitHub: github.com/paixaoalmeida
 #Todo o código está comentado pois preciso lembrar das coisas mais básicas!
 #Ultima alteração dia 03 de Junho ás 17:02
+#Alterações minímas no código: dia 19 de junho | próxima atualização será da v1.1 (toda uma atualização)
 
 
 import socket
@@ -14,15 +15,16 @@ ip = sys.argv[1]
 
 listaportas = [20, 21, 22, 23, 25, 80, 110, 139, 443, 445]  #Lista para as portas
 
-print("O script tem um intervalo de 10 segundos em cada porta! \n")
+print(f"Escaneando portas no host {ip}\n")
+
 for portas in listaportas:  #For loop para ler a lista e fazer as conexões
     meusocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)   #biblioteca socket
-    meusocket.settimeout(10)  #Timeout para conectar nas portas (p nao ficar eternamente tentando conectar)
+    meusocket.settimeout(5)  #Timeout para conectar nas portas (p nao ficar eternamente tentando conectar)
     res = meusocket.connect_ex((ip, portas))  #Conetar o socket no host desejado, modo TCP, endereço e porta
-    time.sleep(10)    #No For loop vai dar um sleep de 10 sec, para tentar evitar ser bloqueado
+    time.sleep(2)
 
     if (res == 0):   #Se for 0 então a porta está ativa
-        print("Porta" ,portas, "Aberta \n")
+        print(f"Porta {portas} aberta\n")
 
         try:
             servico = meusocket.recv(1024)   #Receber a resposta (no caso o banner da porta)
@@ -31,6 +33,7 @@ for portas in listaportas:  #For loop para ler a lista e fazer as conexões
         except:
             print(f"Sem banner capturado na porta {portas} \n")
 meusocket.close()
+
 print("Sem mais portas abertas encontradas!")
 
 
