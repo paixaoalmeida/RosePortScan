@@ -26,29 +26,56 @@
 #Modificação quase que inteira do código
 #Abaixei o delay, pois syn scan não completa conexão (havia me esquecido disso)
 #Apaga todo o lixo do diretório do usuário após o scan e saídas do script
+
+#Dia 23: Adicionado menu e função de abortar com CTRL+C
 #-----------------------------------------------------------------------------------------
 
 #VARIAVEIS
+PORT_MESSAGE="
+
+██████╗░░█████╗░░██████╗███████╗  ██████╗░░█████╗░██████╗░████████╗  ░██████╗░█████╗░░█████╗░███╗░░██╗
+██╔══██╗██╔══██╗██╔════╝██╔════╝  ██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝  ██╔════╝██╔══██╗██╔══██╗████╗░██║
+██████╔╝██║░░██║╚█████╗░█████╗░░  ██████╔╝██║░░██║██████╔╝░░░██║░░░  ╚█████╗░██║░░╚═╝███████║██╔██╗██║
+██╔══██╗██║░░██║░╚═══██╗██╔══╝░░  ██╔═══╝░██║░░██║██╔══██╗░░░██║░░░  ░╚═══██╗██║░░██╗██╔══██║██║╚████║
+██║░░██║╚█████╔╝██████╔╝███████╗  ██║░░░░░╚█████╔╝██║░░██║░░░██║░░░  ██████╔╝╚█████╔╝██║░░██║██║░╚███║
+╚═╝░░╚═╝░╚════╝░╚═════╝░╚══════╝  ╚═╝░░░░░░╚════╝░╚═╝░░╚═╝░░░╚═╝░░░  ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝░░╚══╝
+
+"
 
 MENSAGEM_HELP="
 
-  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-  >      SCAN DE PORTAS TCP POPULARES!                    <
-  >      $(basename $0)                                  <
-  >                                                       <
-  >                                                       <
-  >      .......                                          < ---> MENU DE AJUDA! VEJA O MODO DE USO ABAIXO!
-  >      .     .         .......         SCAN             <
-  >      ....... ......  .    .   ......                  < ---------> MODOO DE USO
-  >      .       .    .  .   .      .                     <
-  >      .       ......  .    ..    .                     < ---> PopularTcpPorts.sh -a [ipdohost] (Scan portas TCP populares | Banner Grabbing)
-  >                                                       <
-  >                                                       < ---> PopularTcpPorts.sh -l [ipdohost] (Scan de todas as portas TCP | SYN scan)
-  >                                                       <
-  >      v1.1 (18/06/22)                                  <
-  >                                                       <
-  > By:Whiterose / Github.com/paixaoalmeida               <
-  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+██████╗░░█████╗░░██████╗███████╗  ██████╗░░█████╗░██████╗░████████╗  ░██████╗░█████╗░░█████╗░███╗░░██╗
+██╔══██╗██╔══██╗██╔════╝██╔════╝  ██╔══██╗██╔══██╗██╔══██╗╚══██╔══╝  ██╔════╝██╔══██╗██╔══██╗████╗░██║
+██████╔╝██║░░██║╚█████╗░█████╗░░  ██████╔╝██║░░██║██████╔╝░░░██║░░░  ╚█████╗░██║░░╚═╝███████║██╔██╗██║
+██╔══██╗██║░░██║░╚═══██╗██╔══╝░░  ██╔═══╝░██║░░██║██╔══██╗░░░██║░░░  ░╚═══██╗██║░░██╗██╔══██║██║╚████║
+██║░░██║╚█████╔╝██████╔╝███████╗  ██║░░░░░╚█████╔╝██║░░██║░░░██║░░░  ██████╔╝╚█████╔╝██║░░██║██║░╚███║
+╚═╝░░╚═╝░╚════╝░╚═════╝░╚══════╝  ╚═╝░░░░░░╚════╝░╚═╝░░╚═╝░░░╚═╝░░░  ╚═════╝░░╚════╝░╚═╝░░╚═╝╚═╝░░╚══╝
+
+  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  >      SCAN DE PORTAS TCP POPULARES!          <
+  >      $(basename $0)                         <
+  >                                             <
+  >                  ╱╱╱╱╱╱╭╮                   <
+  >                  ╱╱╱╱╱╭╯╰╮                  <
+  >                  ╭━━┳━┻╮╭╯                  <
+  >                  ┃━━┫┃━┫┃                   <
+  >                  ┣━━┃┃━┫╰╮                  <
+  >                  ╰━━┻━━┻━╯                  <
+  >                   ╭╮╭┳━━╮                   < ---> MENU DE AJUDA! VEJA O MODO DE USO ABAIXO!
+  >                   ┃┃┃┃━━┫                   <
+  >                   ┃╰╯┣━━┃                   < ---------> MODOO DE USO
+  >                   ╰━━┻━━╯                   <
+  >                 ╱╭━╮                        < ---> PopularTcpPorts.sh -a [ipdohost] (Scan portas TCP populares | Banner Grabbing)
+  >                 ╱┃╭╯                        <
+  >                 ╭╯╰┳━┳━━┳━━╮                < ---> PopularTcpPorts.sh -l [ipdohost] (Scan de todas as portas TCP | SYN scan)
+  >                 ╰╮╭┫╭┫┃━┫┃━┫                <
+  >                 ╱┃┃┃┃┃┃━┫┃━┫                <
+  >                ╱╰╯╰╯╰━━┻━━╯                 <
+  >                                             <
+  >               v1.1 (18/06/22)               <
+  >   By:Whiterose / Github.com/paixaoalmeida   <
+  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 "
 
@@ -128,8 +155,16 @@ esac
 #---------------------------------------------------------------------------------------------------------
 #EXECUÇÕES DO PROGRAMA
 
+#Sair do programa com a tecla CTRL+C
+trap __Ctrl_c__ INT
+
+__Ctrl_c__() {
+    echo -e ${COR_AMARELO}"Ação abortada!"
+    exit 1
+}
+
 #função -a
-[ $CHAVE -eq 1 ] && echo -e ${COR_BRANCO}"ESCANEANDO PORTAS NO HOST ALVO! \e[m \n"
+[ $CHAVE -eq 1 ] && echo "$PORT_MESSAGE" && echo -e ${COR_BRANCO}"ESCANEANDO PORTAS NO HOST ALVO! \e[m \n"
       while read portas;do
         if [ $(hping3 -S -p $portas -c 1 $2 2> /dev/null | grep flags=SA | cut -d " " -f 6 | cut -d = -f 2) ];then
           echo -e ${COR_VERMELHO}"Porta $portas ABERTA no host com"${COR_AMARELO} "IP $2 \e[m \n" | tee -a res.txt
