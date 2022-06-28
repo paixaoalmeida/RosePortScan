@@ -1,9 +1,11 @@
-# RosePortScan
-## PortScans: One made in Shell script and another in Python
+# RosePortScan 
+# See what's inside that host!
 
  <div align="center">
- <img src="https://user-images.githubusercontent.com/85945510/173730723-3b10602a-5057-41a7-8245-d63bd303e31a.jpeg" width="400px" />
+ <img src="https://user-images.githubusercontent.com/85945510/176206252-2c9e3da1-3438-4eb1-ab9b-33d46b3c32b0.png" width="800px" />
 
-## Im still working on these programs while my studies go on, they are getting great, growin up and taking form like babies
+## v1.1 (Shell Script)
 
-### I will post every new version of them (it means i will update the repository like one time a month)
+### Portscan made in shell using some Linux intern tools
+### I would like some help with the code, fell free to hit me up!
+                        
